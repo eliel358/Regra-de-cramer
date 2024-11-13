@@ -3,99 +3,136 @@ import java.util.Scanner;
 class app{
     public static void main(String... arg) throws IOException, InterruptedException {
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        // String[][] sistema = getRow();
+        String[][] sistema = {{"2","3","4","71"},{"8","9","2","12"},{"3","4","3","31"}};
+        sistem(sistema);
         System.out.print("\n");
-        String[][] sistema = {{"3x","2y","-z","0"},{"x","3y","z","1"},{"2x","2y","-2z","2"}};
-        showmatriz(sistema);
         String[][] coefficients = getCoefficients(sistema);
-        showmatriz(sistema);
-        determinant(coefficients);
-        
+        sistem(sistema);
+        float determinantD = determinant(coefficients,"");
+        float determinantX = determinant(replaceColumnnByResults(sistema, 0),"X");
+        float determinantY = determinant(replaceColumnnByResults(sistema, 1),"Y");
+        float determinantZ = determinant(replaceColumnnByResults(sistema, 2),"Z");
+        System.out.println("\nd = "+ determinantD+"\n");
+        System.out.println("dX = "+ determinantX+"\n");
+        System.out.println("dY = "+ determinantY+"\n");
+        System.out.println("dZ = "+ determinantZ+"\n");
+        float x = determinantX/determinantD;
+        float y = determinantY/determinantD;
+        float z = determinantZ/determinantD;
+        System.out.println("x = dX/d = "+x+"\n");
+        System.out.println("y = dY/d = "+y+"\n");
+        System.out.println("z = dZ/d = "+z+"\n");
+    
     }
-        public static String[][] determinant(String[][] matriz){
 
-        System.out.println("\nCalculando determinante:\n");
-        int sumDiagonal1 = Integer.parseInt(matriz[0][0])*
-            Integer.parseInt(matriz[1][1])*
-            Integer.parseInt(matriz[2][2]);
-        int sumDiagonal2 = Integer.parseInt(matriz[0][1])*
-            Integer.parseInt(matriz[1][2])*
-            Integer.parseInt(matriz[2][0]);
-        int sumDiagonal3 = Integer.parseInt(matriz[0][2])*
-            Integer.parseInt(matriz[1][0])*
-            Integer.parseInt(matriz[2][1]);
-        
-        int sumDiagonal4 = Integer.parseInt(matriz[0][1])*
-            Integer.parseInt(matriz[1][0])*
-            Integer.parseInt(matriz[2][2]);
+        public static float determinant(String[][] matrix,String matrixName){
 
-        int sumDiagonal5 = Integer.parseInt(matriz[0][0])*
-            Integer.parseInt(matriz[1][2])*
-            Integer.parseInt(matriz[2][1]);
+        System.out.println("\nCalculando determinante "+matrixName+":\n");
+        float sumDiagonal1 = Float.parseFloat(matrix[0][0])*
+            Float.parseFloat(matrix[1][1])*
+            Float.parseFloat(matrix[2][2]);
+        float sumDiagonal2 = Float.parseFloat(matrix[0][1])*
+            Float.parseFloat(matrix[1][2])*
+            Float.parseFloat(matrix[2][0]);
+        float sumDiagonal3 = Float.parseFloat(matrix[0][2])*
+            Float.parseFloat(matrix[1][0])*
+            Float.parseFloat(matrix[2][1]);
         
-        int sumDiagonal6 = Integer.parseInt(matriz[0][2])*
-            Integer.parseInt(matriz[1][1])*
-            Integer.parseInt(matriz[2][0]);
-        
-        
-        System.out.println(matriz[0][0]+" * "+matriz[1][1]+" * "+matriz[2][2]+" = "+sumDiagonal1);
-        System.out.println(matriz[0][1]+" * "+matriz[1][2]+" * "+matriz[2][0]+" = "+sumDiagonal2);
-        System.out.println(matriz[0][2]+" * "+matriz[1][0]+" * "+matriz[2][1]+" = "+sumDiagonal3);
+        float sumDiagonal4 = Float.parseFloat(matrix[0][1])*
+            Float.parseFloat(matrix[1][0])*
+            Float.parseFloat(matrix[2][2]);
 
-        System.out.println("\nSoma das diagonais da esquerda para a direita:  "+String.valueOf(sumDiagonal1)+" + "+
+        float sumDiagonal5 = Float.parseFloat(matrix[0][0])*
+            Float.parseFloat(matrix[1][2])*
+            Float.parseFloat(matrix[2][1]);
+        
+        float sumDiagonal6 = Float.parseFloat(matrix[0][2])*
+            Float.parseFloat(matrix[1][1])*
+            Float.parseFloat(matrix[2][0]);
+        
+        for(int i = 0;i<matrix.length;i++){
+            System.out.print("[");
+            for(int a = 0;a<matrix.length;a++){
+                if(a == 2 || a==4 || a==6){
+                    System.out.print(matrix[i][a]);
+                }else{
+                    System.out.print(matrix[i][a]+',');
+                }
+            }
+            System.out.print("]");
+            System.out.print("[");
+            for(int a = 0;a<2;a++){
+                if(a == 1){
+                    System.out.print(matrix[i][a]+"]");
+                }else{
+                    System.out.print(matrix[i][a]+',');
+                }
+            }
+        System.out.print("\n"   );
+        }
+        
+        System.out.print("\n");
+
+
+
+        System.out.println("\nSoma do produto dos elementos nas diagonais da esquerda para a direita:  \n");
+        System.out.println(matrix[0][0]+" * "+matrix[1][1]+" * "+matrix[2][2]+" = "+sumDiagonal1);
+        System.out.println(matrix[0][1]+" * "+matrix[1][2]+" * "+matrix[2][0]+" = "+sumDiagonal2);
+        System.out.println(matrix[0][2]+" * "+matrix[1][0]+" * "+matrix[2][1]+" = "+sumDiagonal3+'\n');
+        
+        System.out.println(String.valueOf(sumDiagonal1)+" + "+
         String.valueOf(sumDiagonal2)+" + "+String.valueOf(sumDiagonal3)+" = "+
         String.valueOf(sumDiagonal1+sumDiagonal2+sumDiagonal3)+'\n');
 
-        System.out.println(matriz[0][1]+" * "+matriz[1][0]+" * "+matriz[2][2]+" = "+sumDiagonal4);
-        System.out.println(matriz[0][0]+" * "+matriz[1][2]+" * "+matriz[2][1]+" = "+sumDiagonal5);
-        System.out.println(matriz[0][2]+" * "+matriz[1][1]+" * "+matriz[2][0]+" = "+sumDiagonal6);
-        System.out.println("\nSoma das diagonais da direita para a esquerda: "+String.valueOf(sumDiagonal4)+
-        " + "+String.valueOf(sumDiagonal5)+" + "+
-        String.valueOf(sumDiagonal6)+" = "+String.valueOf(sumDiagonal4+sumDiagonal5+sumDiagonal6)+'\n');
-        int determinant = Integer.parseInt(String.valueOf((sumDiagonal1+sumDiagonal2+sumDiagonal3) - (sumDiagonal4+sumDiagonal5+sumDiagonal6))) + determinant;
-        System.out.println("Determinante: "+(sumDiagonal1+sumDiagonal2+sumDiagonal3)+ " - " + (sumDiagonal4+sumDiagonal5+sumDiagonal6)+" = "+determinant);
-        return matriz;
-    }
-    public static String[][] getCoefficients(String[][] matriz){
+        System.out.println("\nSoma do produto dos elementos nas diagonais da direita para a esquerda: \n");
 
+        System.out.println(matrix[0][1]+" * "+matrix[1][0]+" * "+matrix[2][2]+" = "+sumDiagonal4);
+        System.out.println(matrix[0][0]+" * "+matrix[1][2]+" * "+matrix[2][1]+" = "+sumDiagonal5);
+        System.out.println(matrix[0][2]+" * "+matrix[1][1]+" * "+matrix[2][0]+" = "+sumDiagonal6+'\n');
+        System.out.println(String.valueOf(sumDiagonal4)+
+        " + "+String.valueOf(sumDiagonal5)+" + "+
+        String.valueOf(sumDiagonal6)+" = "+String.valueOf(sumDiagonal4+sumDiagonal5+sumDiagonal6)+"\n");
+        float determinant = Float.parseFloat(String.valueOf((sumDiagonal1+sumDiagonal2+sumDiagonal3) - (sumDiagonal4+sumDiagonal5+sumDiagonal6)));
+        System.out.println("Determinante "+matrixName+": "+(sumDiagonal1+sumDiagonal2+sumDiagonal3)+ " - " + (sumDiagonal4+sumDiagonal5+sumDiagonal6)+" = "+determinant);
+        return determinant;
+    }
+    public static String[][] getCoefficients(String[][] matrix){
+        System.out.println("Obtendo os coeficientes: \n");
         String[] numbers = new String[] {"0","1","2","3","4","5","6","7","8","9"};
-        for(int i = 0;i<matriz.length;i++){
-            for(int a = 0;a<matriz[i].length;a++){
-                if (matriz[i][a].matches(".*[a-z].*")) { 
-                    System.out.println(matriz[i][a]+" tem letra");
-                    matriz[i][a] = matriz[i][a].replaceAll("([a-z])",""); 
-                    if(matriz[i][a].matches("-")){
-                        matriz[i][a] = matriz[i][a].replaceAll("-","-1");
-                    }else if(matriz[i][a].matches("")){
-                        matriz[i][a] = matriz[i][a].replaceAll("","1");
+        for(int i = 0;i<matrix.length;i++){
+            for(int a = 0;a<matrix[i].length;a++){
+                if (matrix[i][a].matches(".*[a-z].*")) {
+                    matrix[i][a] = matrix[i][a].replaceAll("([a-z])",""); 
+                    if(matrix[i][a].matches("-")){
+                        matrix[i][a] = matrix[i][a].replaceAll("-","-1");
+                    }else if(matrix[i][a].matches("")){
+                        matrix[i][a] = matrix[i][a].replaceAll("","1");
                     }
-                }else{
-                    System.out.println(matriz[i][a]+" não tem letra");
                 }
 
             }
         }
-        return matriz;
+        return matrix;
     }
-    public static String[][] sistem(String[][] matriz){
-        for(int i = 0;i<matriz.length;i++){
+    public static String[][] sistem(String[][] matrix){
+        for(int i = 0;i<matrix.length;i++){
             System.out.print("{ ");
-            for(int a=0;a<matriz[i].length;a++){
+            for(int a=0;a<matrix[i].length;a++){
                 if(a == 2){
-                    System.out.print(matriz[i][a]+" = ");
+                    System.out.print(matrix[i][a]+" = ");
                 }else if(a == 3){
-                    System.out.print(matriz[i][a]);
+                    System.out.print(matrix[i][a]);
 
                 }else{
-                    System.out.print(matriz[i][a]+" + ");
+                    System.out.print(matrix[i][a]+" + ");
                 }
             }
             System.out.print("\n");
         }
-        return  matriz;
+        return  matrix;
     }
-
-    
-    public static void showmatriz(String[][] array){
+    public static void showmatrix(String[][] array){
         for(int i = 0;i<array.length;i++){
             System.out.print("[");
             for(int a = 0;a<array.length;a++){
@@ -115,7 +152,7 @@ class app{
         for(int i = 0;i<row.length;i++){
             for(int a = 0;a<row[i].length;a++){
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-                int posicao = 0;
+                float posicao = 0;
                 
                 if(i==0){
                     posicao = a+1;
@@ -159,9 +196,24 @@ class app{
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
         return row;
     }
+    public static String[][] replaceColumnnByResults(String[][] matrix,float columnIndex){
+            
+        String[][] newMatrix = new String[3][4];
+        for(int i = 0;i<matrix.length;i++){
+            for(int a = 0;a<matrix[i].length;a++){
+                if (a == columnIndex){
+                    newMatrix[i][a] = matrix[i][3];
+                }else{
+                    newMatrix[i][a] = matrix[i][a];
+                }
+            }
+        }
+        
+        return newMatrix;
+
+    }
 
 }
-
 
 
 //IDEIA: FAZER UM RELATÓRIO EM UM ARQUIVO TXT COM UM PASSO A PASSO DE COMO FAZER O CALCULO
